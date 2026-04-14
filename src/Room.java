@@ -1,43 +1,106 @@
-public class Room{
+import java.util.Scanner;
+
+public class Room {
+
     private String roomType;
     private String description;
     private boolean visited;
-    private boolean eventTriggered;
     private boolean cleared;
     private Item loot;
-    private boolean lootGenerated;
     private static int count;
-    public Room(){
+
+    public Room() {
         count++;
-        if (count%5 == 0 ){
-            this.roomType = "BOSS";
+
+        if (count % 5 == 0) {
+            roomType = "BOSS";
+        } else {
+            roomType = generateRandomType();
         }
-        else{
-            this.roomType = generateRandomType();
-        }
-        this.description = generateRandomDescription(roomType);
-        this.visited = false;
-        this.eventTriggered = false;
-        this.cleared = false;
-        this.loot = generateRandomLoot(type);
-        this.lootGenerated = true;
+
+        description = generateRandomDescription(roomType);
+        visited = false;
+        cleared = false;
+        loot = null;
     }
+
     private String generateRandomType() {
-        int random = (int) (Math.random()*(3-1+1)+1);
-        if (random == 1){
-            return "SHOP";
-        }
-        else if (random == 2){
-            return "MONSTER";
-        }
-        else{
-            return "HEAL";
-        }
+        int random = (int)(Math.random() * 3) + 1;
 
+        if (random == 1) return "SHOP";
+        if (random == 2) return "MONSTER";
+        return "HEAL";
     }
 
-    public void enter() {
+    public void enter(Player player) {
         visited = true;
+
+        if (loot == null) {
+            loot = LootPool.generate(roomType);
+
+            if (loot == null) {
+                int gold = LootPool.generateGoldAmount();
+                player.addGold(gold);
+                System.out.println("You found " + gold + " gold!");
+            } else {
+                handleLoot(player, loot);
+            }
+        }
+    }
+
+    private void handleLoot(Player player, Item item) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Sword
+        if (item instanceof Sword) {
+            Sword s = (Sword)item;
+
+            System.out.println("You found a sword:");
+            System.out.println("Name: " + s.getName());
+            System.out.println("Damage: " + s.getDamage());
+            System.out.println("Rarity: " + s.getRarity());
+            System.out.println("Tier: " + s.getTier());
+            System.out.println("Equip this sword? (yes/no)");
+
+            String choice = scanner.nextLine();
+
+            if (choice.equalsIgnoreCase("yes")) {
+                player.equipSword(s);
+                System.out.println("You equipped the new sword.");
+            } else {
+                System.out.println("You leave the sword behind.");
+            }
+            return;
+        }
+
+        // Shield
+        if (item instanceof Shield) {
+            Shield sh = (Shield)item;
+
+            System.out.println("You found a shield:");
+            System.out.println("Name: " + sh.getName());
+            System.out.println("Defense: " + sh.getDefense());
+            System.out.println("Equip this shield? (yes/no)");
+
+            String choice = scanner.nextLine();
+
+            if (choice.equalsIgnoreCase("yes")) {
+                player.equipShield(sh);
+                System.out.println("You equipped the new shield.");
+            } else {
+                System.out.println("You leave the shield behind.");
+            }
+            return;
+        }
+
+        // Potion
+        if (item instanceof Potion) {
+            Potion p = (Potion)item;
+
+            System.out.println("You found a potion: " + p.getName() + " (Heals " + p.getHealAmount() + ")");
+            player.addItem(p);
+            System.out.println("Potion added to inventory.");
+        }
     }
 
     public String describe() {
@@ -49,7 +112,7 @@ public class Room{
     }
 
     public String getType() {
-        return type;
+        return roomType;
     }
 
     public Item getLoot() {
@@ -58,7 +121,7 @@ public class Room{
 
     private String generateRandomDescription(String type) {
 
-        if (roomType.equals("MONSTER")) {
+        if (type.equals("MONSTER")) {
             String[] monsterDesc = {
                 "You hear growling in the darkness.",
                 "A foul stench fills the air.",
