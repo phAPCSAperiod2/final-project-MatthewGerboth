@@ -1,3 +1,5 @@
+package items;
+
 public class Potion extends Item {
     private int healAmount;
 

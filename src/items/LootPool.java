@@ -1,5 +1,8 @@
+package items;
+
 public class LootPool {
 
+    // Main loot generator
     public static Item generate(String roomType) {
 
         int pool = (int)(Math.random() * 4);
@@ -17,9 +20,40 @@ public class LootPool {
             return generateSword();
         }
 
-        return null; // gold handled separately
+        // Gold is NOT an item object
+        return null;
     }
 
+    // Gold amount generator
+    public static int generateGoldAmount() {
+        return (int)(Math.random() * 21) + 10; // 10–30 gold
+    }
+
+    // -----------------------------
+    // POTION GENERATOR
+    // -----------------------------
+    private static Potion generatePotion() {
+        String[] names = {"Small Potion", "Potion", "Large Potion"};
+        int[] heals = {10, 20, 40};
+
+        int i = (int)(Math.random() * names.length);
+        return new Potion(names[i], heals[i]);
+    }
+
+    // -----------------------------
+    // SHIELD GENERATOR
+    // -----------------------------
+    private static Shield generateShield() {
+        String[] names = {"Wooden Shield", "Iron Shield", "Steel Shield"};
+        int[] defense = {2, 4, 6};
+
+        int i = (int)(Math.random() * names.length);
+        return new Shield(names[i], defense[i]);
+    }
+
+    // -----------------------------
+    // SWORD GENERATOR (random rarity, tier, name, damage)
+    // -----------------------------
     private static Sword generateSword() {
 
         // ---------- RARITY ----------

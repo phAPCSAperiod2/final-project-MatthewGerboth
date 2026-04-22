@@ -1,3 +1,5 @@
+package items;
+
 public class Sword extends Item {
 
     private int damage;
@@ -22,3 +24,4 @@ public class Sword extends Item {
     public String getTier() {
         return tier;
     }
+}

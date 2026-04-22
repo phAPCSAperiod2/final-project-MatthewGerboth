@@ -1,3 +1,5 @@
+package items;
+
 public class Shield extends Item {
     private int defense;
 

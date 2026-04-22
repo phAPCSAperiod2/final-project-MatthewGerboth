@@ -1,5 +1,11 @@
 import java.util.Scanner;
 
+import items.Item;
+import items.LootPool;
+import items.Potion;
+import items.Shield;
+import items.Sword;
+
 public class Room {
 
     private String roomType;
@@ -7,11 +13,15 @@ public class Room {
     private boolean visited;
     private boolean cleared;
     private Item loot;
-    private static int count;
+    private static int count = 0;
 
+    // -------------------------
+    // CONSTRUCTOR
+    // -------------------------
     public Room() {
         count++;
 
+        // Every 5th room is a boss
         if (count % 5 == 0) {
             roomType = "BOSS";
         } else {
@@ -24,49 +34,85 @@ public class Room {
         loot = null;
     }
 
+    // -------------------------
+    // RANDOM ROOM TYPE
+    // -------------------------
     private String generateRandomType() {
-        int random = (int)(Math.random() * 3) + 1;
+        int r = (int)(Math.random() * 3); // 0–2
 
-        if (random == 1) return "SHOP";
-        if (random == 2) return "MONSTER";
-        return "HEAL";
+        if (r == 0) return "MONSTER";
+        if (r == 1) return "HEAL";
+        return "SHOP";
     }
 
+    // -------------------------
+    // ENTER ROOM
+    // -------------------------
     public void enter(Player player) {
+
         visited = true;
 
+        // COMBAT ROOMS
+        if (roomType.equals("MONSTER") || roomType.equals("BOSS")) {
+            CombatSystem.startCombat(player);
+
+            if (player.getHealth() <= 0) {
+                System.out.println("You died in battle...");
+                return;
+            }
+
+            cleared = true;
+        }
+
+        // HEAL ROOM
+        if (roomType.equals("HEAL")) {
+            int heal = (int)(Math.random() * 16) + 10; // 10–25 heal
+            player.heal(heal);
+            System.out.println("A warm light heals you for +" + heal + " HP.");
+            cleared = true;
+        }
+
+        // SHOP ROOM
+        if (roomType.equals("SHOP")) {
+            ShopRoom shop = new ShopRoom();
+            shop.enter(player);
+            cleared = true;
+        }
+
+        // LOOT (only once)
         if (loot == null) {
             loot = LootPool.generate(roomType);
 
             if (loot == null) {
+                // Gold drop
                 int gold = LootPool.generateGoldAmount();
                 player.addGold(gold);
                 System.out.println("You found " + gold + " gold!");
             } else {
-                handleLoot(player, loot);
+                giveLootToPlayer(player, loot);
             }
         }
     }
 
-    private void handleLoot(Player player, Item item) {
+    // -------------------------
+    // GIVE LOOT TO PLAYER
+    // -------------------------
+    private void giveLootToPlayer(Player player, Item item) {
         Scanner scanner = new Scanner(System.in);
 
         // Sword
         if (item instanceof Sword) {
             Sword s = (Sword)item;
 
-            System.out.println("You found a sword:");
-            System.out.println("Name: " + s.getName());
-            System.out.println("Damage: " + s.getDamage());
-            System.out.println("Rarity: " + s.getRarity());
-            System.out.println("Tier: " + s.getTier());
-            System.out.println("Equip this sword? (yes/no)");
+            System.out.println("\nYou found a sword:");
+            System.out.println(s.getName() + " (DMG " + s.getDamage() + ", " + s.getRarity() + ", " + s.getTier() + ")");
+            System.out.println("Equip it? (yes/no)");
 
             String choice = scanner.nextLine();
 
             if (choice.equalsIgnoreCase("yes")) {
                 player.equipSword(s);
-                System.out.println("You equipped the new sword.");
+                System.out.println("You equipped the sword.");
             } else {
                 System.out.println("You leave the sword behind.");
             }
@@ -77,16 +123,15 @@ public class Room {
         if (item instanceof Shield) {
             Shield sh = (Shield)item;
 
-            System.out.println("You found a shield:");
-            System.out.println("Name: " + sh.getName());
-            System.out.println("Defense: " + sh.getDefense());
-            System.out.println("Equip this shield? (yes/no)");
+            System.out.println("\nYou found a shield:");
+            System.out.println(sh.getName() + " (DEF " + sh.getDefense() + ")");
+            System.out.println("Equip it? (yes/no)");
 
             String choice = scanner.nextLine();
 
             if (choice.equalsIgnoreCase("yes")) {
                 player.equipShield(sh);
-                System.out.println("You equipped the new shield.");
+                System.out.println("You equipped the shield.");
             } else {
                 System.out.println("You leave the shield behind.");
             }
@@ -96,11 +141,61 @@ public class Room {
         // Potion
         if (item instanceof Potion) {
             Potion p = (Potion)item;
-
-            System.out.println("You found a potion: " + p.getName() + " (Heals " + p.getHealAmount() + ")");
+            System.out.println("\nYou found a potion: " + p.getName() + " (Heals " + p.getHealAmount() + ")");
             player.addItem(p);
             System.out.println("Potion added to inventory.");
         }
+    }
+
+    // -------------------------
+    // ROOM DESCRIPTION
+    // -------------------------
+    private String generateRandomDescription(String type) {
+
+        if (type.equals("MONSTER")) {
+            String[] desc = {
+                "You hear growling in the darkness.",
+                "A foul stench fills the air.",
+                "Something moves in the shadows."
+            };
+            return desc[(int)(Math.random() * desc.length)];
+        }
+
+        if (type.equals("HEAL")) {
+            String[] desc = {
+                "A warm light fills the room.",
+                "You feel a soothing presence.",
+                "A healing aura surrounds you."
+            };
+            return desc[(int)(Math.random() * desc.length)];
+        }
+
+        if (type.equals("SHOP")) {
+            String[] desc = {
+                "A merchant greets you with a grin.",
+                "You find a small traveling shop.",
+                "A trader waves you over."
+            };
+            return desc[(int)(Math.random() * desc.length)];
+        }
+
+        if (type.equals("BOSS")) {
+            String[] desc = {
+                "The air grows heavy… a powerful presence awaits.",
+                "A massive shadow looms ahead.",
+                "You feel overwhelming danger."
+            };
+            return desc[(int)(Math.random() * desc.length)];
+        }
+
+        return "An empty room.";
+    }
+
+    // -------------------------
+    // GETTERS
+    // -------------------------
+    public String getType() {
+        return roomType;
     }
 
     public String describe() {
@@ -111,52 +206,7 @@ public class Room {
         return cleared;
     }
 
-    public String getType() {
-        return roomType;
-    }
-
     public Item getLoot() {
         return loot;
-    }
-
-    private String generateRandomDescription(String type) {
-
-        if (type.equals("MONSTER")) {
-            String[] monsterDesc = {
-                "You hear growling in the darkness.",
-                "A foul stench fills the air.",
-                "Something moves in the shadows."
-            };
-            return monsterDesc[(int)(Math.random() * monsterDesc.length)];
-        }
-
-        if (type.equals("HEAL")) {
-            String[] healDesc = {
-                "A warm light fills the room.",
-                "You feel a soothing presence.",
-                "A healing aura surrounds you."
-            };
-            return healDesc[(int)(Math.random() * healDesc.length)];
-        }
-
-        if (type.equals("SHOP")) {
-            String[] shopDesc = {
-                "A merchant greets you with a grin.",
-                "You find a small traveling shop.",
-                "A trader waves you over."
-            };
-            return shopDesc[(int)(Math.random() * shopDesc.length)];
-        }
-
-        if (type.equals("BOSS")) {
-            String[] bossDesc = {
-                "The air grows heavy… a powerful presence awaits.",
-                "A massive shadow looms ahead.",
-                "You feel overwhelming danger."
-            };
-            return bossDesc[(int)(Math.random() * bossDesc.length)];
-        }
-
-        return "Undefined room type.";
     }
 }

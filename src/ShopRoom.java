@@ -1,5 +1,12 @@
 import java.util.Scanner;
 
+import items.Item;
+import items.LootPool;
+import items.Potion;
+import items.Shield;
+import items.Sword;
+
+
 public class ShopRoom {
 
     private Item[] shopItems;
