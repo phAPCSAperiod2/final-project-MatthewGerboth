@@ -14,6 +14,8 @@ public class Player {
     private int health;
     private int maxHealth;
     private int gold;
+    private int baseDamage;
+
 
     private Sword equippedSword;
     private Shield equippedShield;
@@ -28,6 +30,7 @@ public class Player {
         this.maxHealth = 100;
         this.health = maxHealth;
         this.gold = 0;
+        this.baseDamage = 4;
 
         this.equippedSword = null;
         this.equippedShield = null;
@@ -135,6 +138,26 @@ public class Player {
 
         return dmg;
     }
+    public boolean usePotion() {
+    // Look for a potion in the inventory
+    for (int i = 0; i < inventory.size(); i++) {
+        if (inventory.get(i) instanceof Potion) {
+            Potion p = (Potion) inventory.get(i);
+
+            // Heal the player
+            heal(p.getHealAmount());
+
+            // Remove potion from inventory
+            inventory.remove(i);
+
+            System.out.println("You used a " + p.getName() + " and healed " + p.getHealAmount() + " HP.");
+            return true;
+        }
+    }
+
+    return false; // no potion found
+}
+
 
     public void takeDamage(int dmg) {
         health -= dmg;
@@ -145,6 +168,22 @@ public class Player {
         health += amount;
         if (health > maxHealth) health = maxHealth;
     }
+    public int attackEnemy(Enemy enemy) {
+    int dmg = getAttack();  // or baseDamage, depending on your Player class
+    enemy.takeDamage(dmg);
+    return dmg;
+}
+public int getAttack() {
+    int dmg = baseDamage;
+
+    if (equippedSword != null) {
+        dmg += equippedSword.getDamage();
+    }
+
+    return dmg;
+}
+
+
 
     // -------------------------
     // STATUS DISPLAY
@@ -181,4 +220,5 @@ public class Player {
         }
         return count;
     }
+
 }

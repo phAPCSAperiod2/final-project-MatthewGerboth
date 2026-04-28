@@ -11,23 +11,19 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
 
-  // Keep the UI calm for beginners: show problems but don't block them
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
   },
 
   // === Java (AP CSA friendly) ===
-  // Use the Java language server and enable hints that help explain code
   "java.inlayHints.parameterNames.enabled": "literals",
-  "java.inlayHints.parameterNames.exclusions": [ "println" ],
-  "java.configuration.runtimes": [
-    { "name": "JavaSE-17", "path": "/usr/lib/jvm/msopenjdk-17" }
-  ],
+  "java.inlayHints.parameterNames.exclusions": ["println"],
+
+
   "java.format.settings.url": "eclipse-formatter.xml",
   "java.format.settings.profile": "GoogleStyle",
   "java.saveActions.organizeImports": true,
 
-  // Test discovery & default test runner
   "java.test.config": [
     {
       "name": "JUnit (Default)",
@@ -36,14 +32,13 @@
       "vmArgs": []
     }
   ],
+
   "java.test.defaultConfig": "JUnit (Default)",
 
-  // === Problems & validation ===
   "problems.showCurrentInStatus": true,
   "java.errors.incompleteClasspath.severity": "warning",
   "java.compile.nullAnalysis.mode": "automatic",
 
-  // === Files students should focus on ===
   "files.exclude": {
     "**/.classpath": true,
     "**/.project": true,
@@ -51,5 +46,10 @@
     "**/bin": true,
     "**/out": true,
     "**/target": true
-  }
+  },
+
+  "java.project.sourcePaths": ["src"],
+  "java.project.referencedLibraries": [],
+
+  "githubPullRequests.ignoredPullRequestBranches": ["main"]
 }

@@ -13,19 +13,26 @@ public class Room {
     private boolean visited;
     private boolean cleared;
     private Item loot;
+
     private static int count = 0;
 
-    // -------------------------
-    // CONSTRUCTOR
-    // -------------------------
+    // ---------------------------------------------------------
+    // CONSTRUCTOR — enemy every other room, boss every 5 rooms
+    // ---------------------------------------------------------
     public Room() {
         count++;
 
-        // Every 5th room is a boss
+        // Boss room every 5th room
         if (count % 5 == 0) {
             roomType = "BOSS";
-        } else {
-            roomType = generateRandomType();
+        }
+        // Odd rooms = guaranteed monster
+        else if (count % 2 == 1) {
+            roomType = "MONSTER";
+        }
+        // Even rooms = heal or shop
+        else {
+            roomType = generateNonMonsterType();
         }
 
         description = generateRandomDescription(roomType);
@@ -34,25 +41,23 @@ public class Room {
         loot = null;
     }
 
-    // -------------------------
-    // RANDOM ROOM TYPE
-    // -------------------------
-    private String generateRandomType() {
-        int r = (int)(Math.random() * 3); // 0–2
-
-        if (r == 0) return "MONSTER";
-        if (r == 1) return "HEAL";
+    // ---------------------------------------------------------
+    // Generate HEAL or SHOP for even rooms
+    // ---------------------------------------------------------
+    private String generateNonMonsterType() {
+        int r = (int)(Math.random() * 2); // 0–1
+        if (r == 0) return "HEAL";
         return "SHOP";
     }
 
-    // -------------------------
+    // ---------------------------------------------------------
     // ENTER ROOM
-    // -------------------------
+    // ---------------------------------------------------------
     public void enter(Player player) {
 
         visited = true;
 
-        // COMBAT ROOMS
+        // MONSTER or BOSS → combat
         if (roomType.equals("MONSTER") || roomType.equals("BOSS")) {
             CombatSystem.startCombat(player);
 
@@ -94,9 +99,9 @@ public class Room {
         }
     }
 
-    // -------------------------
+    // ---------------------------------------------------------
     // GIVE LOOT TO PLAYER
-    // -------------------------
+    // ---------------------------------------------------------
     private void giveLootToPlayer(Player player, Item item) {
         Scanner scanner = new Scanner(System.in);
 
@@ -147,9 +152,9 @@ public class Room {
         }
     }
 
-    // -------------------------
+    // ---------------------------------------------------------
     // ROOM DESCRIPTION
-    // -------------------------
+    // ---------------------------------------------------------
     private String generateRandomDescription(String type) {
 
         if (type.equals("MONSTER")) {
@@ -191,9 +196,9 @@ public class Room {
         return "An empty room.";
     }
 
-    // -------------------------
+    // ---------------------------------------------------------
     // GETTERS
-    // -------------------------
+    // ---------------------------------------------------------
     public String getType() {
         return roomType;
     }
@@ -209,4 +214,8 @@ public class Room {
     public Item getLoot() {
         return loot;
     }
+    public static int getRoomCount() {
+    return count;
+}
+
 }
