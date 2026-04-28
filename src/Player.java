@@ -7,9 +7,6 @@ import items.Sword;
 
 public class Player {
 
-    // -------------------------
-    // INSTANCE VARIABLES
-    // -------------------------
     private String name;
     private int health;
     private int maxHealth;
