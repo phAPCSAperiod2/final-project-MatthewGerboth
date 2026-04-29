@@ -19,9 +19,6 @@ public class Player {
 
     private ArrayList<Item> inventory;
 
-    // -------------------------
-    // CONSTRUCTOR
-    // -------------------------
     public Player(String name) {
         this.name = name;
         this.maxHealth = 100;
@@ -35,9 +32,6 @@ public class Player {
         this.inventory = new ArrayList<Item>();
     }
 
-    // -------------------------
-    // GETTERS & SETTERS
-    // -------------------------
     public String getName() {
         return name;
     }
@@ -84,17 +78,12 @@ public class Player {
         return inventory;
     }
 
-    // -------------------------
-    // GOLD MANAGEMENT
-    // -------------------------
     public void addGold(int amount) {
         gold += amount;
         if (gold < 0) gold = 0;
     }
 
-    // -------------------------
-    // INVENTORY MANAGEMENT
-    // -------------------------
+
     public void addItem(Item item) {
         inventory.add(item);
     }
@@ -112,9 +101,7 @@ public class Player {
         return null;
     }
 
-    // -------------------------
-    // EQUIPMENT
-    // -------------------------
+ 
     public void equipSword(Sword newSword) {
         equippedSword = newSword;
     }
