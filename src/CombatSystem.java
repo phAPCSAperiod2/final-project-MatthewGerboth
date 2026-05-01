@@ -10,9 +10,6 @@ public class CombatSystem {
         System.out.println("\nA " + enemy.getName() + " appears!");
         System.out.println("Enemy HP: " + enemy.getHealth());
 
-        // -----------------------------
-        // MAIN COMBAT LOOP
-        // -----------------------------
         while (player.getHealth() > 0 && enemy.isAlive()) {
 
             System.out.println("\nYour HP: " + player.getHealth() + "/" + player.getMaxHealth());
@@ -21,13 +18,14 @@ public class CombatSystem {
             System.out.println("\nChoose an action:");
             System.out.println("1. Attack");
             System.out.println("2. Use Potion");
-            System.out.println("3. Run");
+            System.out.println("3. Inventory");
+            System.out.println("4. Run");
 
             String choice = scanner.nextLine();
 
-            // -----------------------------
-            // PLAYER ATTACK
-            // -----------------------------
+            boolean playerTookTurn = false;
+
+            // ATTACK
             if (choice.equals("1")) {
                 int dmg = player.attackEnemy(enemy);
                 System.out.println("You dealt " + dmg + " damage!");
@@ -36,35 +34,40 @@ public class CombatSystem {
                     System.out.println("You defeated the " + enemy.getName() + "!");
                     break;
                 }
+
+                playerTookTurn = true; // enemy gets to attack
             }
 
-            // -----------------------------
-            // USE POTION
-            // -----------------------------
+            // USE POTION (NO TURN USED)
             else if (choice.equals("2")) {
                 boolean used = player.usePotion();
                 if (!used) {
                     System.out.println("You have no potions!");
                 }
+                continue; // skip enemy attack
             }
 
-            // -----------------------------
-            // RUN AWAY
-            // -----------------------------
+            // INVENTORY (NO TURN USED)
             else if (choice.equals("3")) {
+                player.openInventoryMenu();
+                continue; // skip enemy attack
+            }
+
+            // RUN
+            else if (choice.equals("4")) {
                 System.out.println("You ran away!");
                 return;
             }
 
-            // -----------------------------
-            // ENEMY ATTACKS BACK
-            // -----------------------------
-            System.out.println(enemy.getName() + " attacks!");
-            enemy.attackPlayer(player);
+            // ENEMY ATTACKS ONLY IF PLAYER ATTACKED
+            if (playerTookTurn) {
+                System.out.println(enemy.getName() + " attacks!");
+                enemy.attackPlayer(player);
 
-            if (player.getHealth() <= 0) {
-                System.out.println("You were defeated...");
-                return;
+                if (player.getHealth() <= 0) {
+                    System.out.println("You were defeated...");
+                    return;
+                }
             }
         }
     }

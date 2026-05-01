@@ -6,7 +6,6 @@ public class Enemy {
     private int attack;
 
     public Enemy() {
-
         int room = Room.getRoomCount();
 
         String[] names = {"Goblin", "Skeleton", "Zombie", "Bandit", "Wolf"};
@@ -43,36 +42,16 @@ public class Enemy {
         attack = baseAttack;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public int getAttack() {
-        return attack;
-    }
-
-    public int getMaxHealth() {
-        return maxHealth;
-    }
+    public String getName() { return name; }
+    public int getHealth() { return health; }
+    public int getMaxHealth() { return maxHealth; }
+    public int getAttack() { return attack; }
 
     public void takeDamage(int dmg) {
         health -= dmg;
-        if (health < 0) {
-            health = 0;
-        }
+        if (health < 0) health = 0;
     }
 
-    public boolean isDead() {
-        return health <= 0;
-    }
-
-    // -----------------------------
-    // REQUIRED BY YOUR CombatSystem
-    // -----------------------------
     public boolean isAlive() {
         return health > 0;
     }
