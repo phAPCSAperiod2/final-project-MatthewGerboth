@@ -17,7 +17,7 @@ public class ShopRoom {
     }
 
     private void refreshShop() {
-        // Random number of items: 2–4
+
         itemCount = (int)(Math.random() * 3) + 2;
         shopItems = new Item[itemCount];
 
@@ -28,7 +28,7 @@ public class ShopRoom {
 
     public void enter(Player player) {
         System.out.println("A merchant greets you with a grin.");
-        refreshShop(); // ← shop refreshes every time you enter
+        refreshShop(); //
         openShop(player);
     }
 
@@ -113,7 +113,7 @@ public class ShopRoom {
             System.out.println("Potion added to inventory.");
         }
 
-        shopItems[index] = null; // remove from shop
+        shopItems[index] = null; 
     }
 
     private int getPrice(Item item) {

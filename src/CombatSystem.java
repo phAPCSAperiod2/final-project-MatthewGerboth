@@ -25,7 +25,6 @@ public class CombatSystem {
 
             boolean playerTookTurn = false;
 
-            // ATTACK
             if (choice.equals("1")) {
                 int dmg = player.attackEnemy(enemy);
                 System.out.println("You dealt " + dmg + " damage!");
@@ -35,31 +34,31 @@ public class CombatSystem {
                     break;
                 }
 
-                playerTookTurn = true; // enemy gets to attack
+                playerTookTurn = true;
             }
 
-            // USE POTION (NO TURN USED)
+
             else if (choice.equals("2")) {
                 boolean used = player.usePotion();
                 if (!used) {
                     System.out.println("You have no potions!");
                 }
-                continue; // skip enemy attack
+                continue;
             }
 
-            // INVENTORY (NO TURN USED)
+
             else if (choice.equals("3")) {
                 player.openInventoryMenu();
-                continue; // skip enemy attack
+                continue;
             }
 
-            // RUN
+
             else if (choice.equals("4")) {
                 System.out.println("You ran away!");
                 return;
             }
 
-            // ENEMY ATTACKS ONLY IF PLAYER ATTACKED
+
             if (playerTookTurn) {
                 System.out.println(enemy.getName() + " attacks!");
                 enemy.attackPlayer(player);

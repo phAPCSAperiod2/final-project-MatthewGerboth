@@ -21,16 +21,12 @@ public class Player {
 
     private ArrayList<Item> inventory = new ArrayList<>();
 
-    // ---------------------------------------------------------
-    // DEFAULT CONSTRUCTOR
-    // ---------------------------------------------------------
+   
     public Player() {
         this("Player"); // default name
     }
 
-    // ---------------------------------------------------------
-    // NAME CONSTRUCTOR (FIXES YOUR ERROR)
-    // ---------------------------------------------------------
+
     public Player(String name) {
         this.name = name;
 
@@ -44,9 +40,7 @@ public class Player {
         return name;
     }
 
-    // ---------------------------------------------------------
-    // COMBAT DAMAGE
-    // ---------------------------------------------------------
+
     public int getAttack() {
         int dmg = baseDamage;
 
@@ -63,9 +57,7 @@ public class Player {
         return dmg;
     }
 
-    // ---------------------------------------------------------
-    // HEALTH
-    // ---------------------------------------------------------
+
     public void takeDamage(int dmg) {
         health -= dmg;
         if (health < 0) health = 0;
@@ -79,9 +71,7 @@ public class Player {
     public int getHealth() { return health; }
     public int getMaxHealth() { return maxHealth; }
 
-    // ---------------------------------------------------------
-    // GOLD
-    // ---------------------------------------------------------
+
     public void addGold(int amount) {
         gold += amount;
     }
@@ -90,9 +80,7 @@ public class Player {
         return gold;
     }
 
-    // ---------------------------------------------------------
-    // EQUIPMENT
-    // ---------------------------------------------------------
+
     public void equipSword(Sword sword) {
         this.equippedSword = sword;
         System.out.println("You equipped the " + sword.getName() + "!");
@@ -106,9 +94,6 @@ public class Player {
     public Sword getEquippedSword() { return equippedSword; }
     public Shield getEquippedShield() { return equippedShield; }
 
-    // ---------------------------------------------------------
-    // POTION USE
-    // ---------------------------------------------------------
     public boolean usePotion() {
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i) instanceof Potion) {
@@ -122,9 +107,7 @@ public class Player {
         return false;
     }
 
-    // ---------------------------------------------------------
-    // STACKED INVENTORY VIEW
-    // ---------------------------------------------------------
+
     public ArrayList<String> getStackedInventory() {
         ArrayList<String> result = new ArrayList<>();
 
@@ -161,9 +144,7 @@ public class Player {
         return result;
     }
 
-    // ---------------------------------------------------------
-    // 2D INVENTORY GRID
-    // ---------------------------------------------------------
+
     public void displayInventoryGrid() {
         ArrayList<String> stacked = getStackedInventory();
 
@@ -189,9 +170,7 @@ public class Player {
         }
     }
 
-    // ---------------------------------------------------------
-    // INVENTORY MENU (USE ITEMS)
-    // ---------------------------------------------------------
+
     public void openInventoryMenu() {
         displayInventoryGrid();
 
@@ -245,9 +224,7 @@ public class Player {
         }
     }
 
-    // ---------------------------------------------------------
-    // ADD ITEM
-    // ---------------------------------------------------------
+
     public void addItem(Item item) {
         inventory.add(item);
     }

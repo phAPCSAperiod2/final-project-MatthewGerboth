@@ -16,21 +16,18 @@ public class Room {
 
     private static int count = 0;
 
-    // ---------------------------------------------------------
-    // CONSTRUCTOR — enemy every other room, boss every 5 rooms
-    // ---------------------------------------------------------
+
     public Room() {
         count++;
 
-        // Boss room every 5th room
         if (count % 5 == 0) {
             roomType = "BOSS";
         }
-        // Odd rooms = guaranteed monster
+
         else if (count % 2 == 1) {
             roomType = "MONSTER";
         }
-        // Even rooms = heal or shop
+
         else {
             roomType = generateNonMonsterType();
         }
@@ -41,23 +38,17 @@ public class Room {
         loot = null;
     }
 
-    // ---------------------------------------------------------
-    // Generate HEAL or SHOP for even rooms
-    // ---------------------------------------------------------
     private String generateNonMonsterType() {
         int r = (int)(Math.random() * 2); // 0–1
         if (r == 0) return "HEAL";
         return "SHOP";
     }
 
-    // ---------------------------------------------------------
-    // ENTER ROOM
-    // ---------------------------------------------------------
     public void enter(Player player) {
 
         visited = true;
 
-        // MONSTER or BOSS → combat
+
         if (roomType.equals("MONSTER") || roomType.equals("BOSS")) {
             CombatSystem.startCombat(player);
 
@@ -69,7 +60,7 @@ public class Room {
             cleared = true;
         }
 
-        // HEAL ROOM
+
         if (roomType.equals("HEAL")) {
             int heal = (int)(Math.random() * 16) + 10; // 10–25 heal
             player.heal(heal);
@@ -77,14 +68,12 @@ public class Room {
             cleared = true;
         }
 
-        // SHOP ROOM
         if (roomType.equals("SHOP")) {
             ShopRoom shop = new ShopRoom();
             shop.enter(player);
             cleared = true;
         }
 
-        // LOOT (only once)
         if (loot == null) {
             loot = LootPool.generate(roomType);
 
@@ -99,9 +88,7 @@ public class Room {
         }
     }
 
-    // ---------------------------------------------------------
-    // GIVE LOOT TO PLAYER
-    // ---------------------------------------------------------
+
     private void giveLootToPlayer(Player player, Item item) {
         Scanner scanner = new Scanner(System.in);
 
@@ -152,9 +139,7 @@ public class Room {
         }
     }
 
-    // ---------------------------------------------------------
-    // ROOM DESCRIPTION
-    // ---------------------------------------------------------
+
     private String generateRandomDescription(String type) {
 
         if (type.equals("MONSTER")) {
@@ -196,9 +181,7 @@ public class Room {
         return "An empty room.";
     }
 
-    // ---------------------------------------------------------
-    // GETTERS
-    // ---------------------------------------------------------
+   
     public String getType() {
         return roomType;
     }
